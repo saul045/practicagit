@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-
+import java.sql.ResultSet;
 /**
  *
  * @author Dell1
@@ -93,6 +93,11 @@ public class Cliente extends javax.swing.JFrame {
         });
 
         btmEliminar.setText("Eliminar");
+        btmEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btmEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,37 +167,111 @@ public class Cliente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+public void actualizarCliente (int idCliente){
+try{
+    String nombre = txtNombre.getText();
+        String apellido = txtApellido.getText();
+        Double limite = Double.parseDouble(txtLimiteCredito.getText());
+        
+        String qry = " update public.cliente set nombre=?, apellido=?, limite_credito=? "+
+                "where id_cliente=?";
+    PreparedStatement ps = con.prepareStatement(qry);
+    ps.setString(1, nombre);
+    ps.setString(2, apellido);
+    ps.setDouble(3, limite);
+    ps.setInt(4, idCliente);
+    int filasActualizadas = ps.executeUpdate();
+    if (filasActualizadas == 1){
+        JOptionPane.showMessageDialog(null, "registro Actualizados"+filasActualizadas);
+}else {
+        JOptionPane.showMessageDialog(null,"error en la actualizacion");
+        }
+}catch (SQLException ex){
+    System.out.println(ex.getMessage());
+}
+    }
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
+
+        actualizarCliente(Integer.parseInt(txtIdCliente.getText()));
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidoActionPerformed
 
+    public void consultarCliente(){
+        
+    try{
+    String id = JOptionPane.showInputDialog(null, "ingresa el codigo a eliminar");
+    String qry = " Select * from public.cliente where id_cliente = ? ";
+    PreparedStatement ps = con.prepareStatement(qry);
+ps.setInt(1,Integer.parseInt(id));
+ResultSet rs = ps.executeQuery();
+int contador = 0;
+while (rs.next()){
+    contador ++;
+txtNombre.setText(rs.getString("nombre"));
+txtApellido.setText(rs.getString("apellido"));
+txtLimiteCredito.setText(rs.getString("limite_credito"));
+}
+if (contador == 0){
+    JOptionPane.showMessageDialog(null,"no existe cliente");
+}
+    }catch (SQLException ex){
+        System.out.println(ex.getMessage());
+        
+    }
+}
+    
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-JOptionPane.showMessageDialog(null,"hola mundo");
-        // TODO add your handling code here:
+    consultarCliente();       // TODO add your handling code here:
     }//GEN-LAST:event_btnConsultarActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+public void GuardarCliente(){
+try{        
         String nombre = txtNombre.getText();
         String apellido = txtApellido.getText();
         String limite = txtLimiteCredito.getText();
-                   try {
-            Statement smt = con.createStatement();
-        String qry = "insert into public.cliente (nombre,apellido,limite_credito)" +
-           "values ('"+ nombre +"','"+ apellido +"','"+ limite +"')";
-        int filasInsertadas = smt.executeUpdate(qry);
-            JOptionPane.showMessageDialog(null,"Registros"+filasInsertadas);
-            smt.close();     
-        } catch (SQLException ex){
-            ex.getMessage();
-        }
+        String qry = " insert into public.cliente (nombre, apellido, limite_credito) "+
+                " values (?, ?, ?)";
+    PreparedStatement ps = con.prepareStatement(qry);
+    ps.setString (1, nombre);
+    ps.setString (2, apellido);
+    ps.setDouble(3, Double.parseDouble(limite));
+    int filasInsertadas = ps.executeUpdate();
+    if (filasInsertadas ==1){
+        JOptionPane.showMessageDialog(null,"total de registros " +filasInsertadas);
+    }
+    }catch (SQLException ex){
+        ex.getMessage();
+        
+    }
+}
 
+
+
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    GuardarCliente();
 // TODO add your handling code here:
     }//GEN-LAST:event_btnGuardarActionPerformed
+public void eliminarCliente(){
+    try{
+    String id = JOptionPane.showInputDialog(null, "ingresa el codigo a eliminar");
+    String qry = " delete from public.cliente where id_cliente = ? ";
+    PreparedStatement ps = con.prepareStatement(qry);
+    ps.setInt(1,Integer.parseInt(id));
+    int filasEliminadas = ps.executeUpdate();
+        JOptionPane.showMessageDialog(null, "registro eliminado:"+filasEliminadas);
+    }catch (SQLException e){
+        System.out.println(e.getMessage());
+        
+    }
+}
+    private void btmEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminarCliente();
+    }//GEN-LAST:event_btmEliminarActionPerformed
 
     /**
      * @param args the command line arguments

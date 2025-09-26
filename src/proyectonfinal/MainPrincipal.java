@@ -16,20 +16,20 @@ import java.sql.PreparedStatement;
  * @author Dell1
  */
 public class MainPrincipal {
-    public static void main(String[] args) throws SQLException {
-        CreateConection conexionPostgres = new CreateConection();
-        Connection con = conexionPostgres.getConection();
-        try {
-            Statement smt = con.createStatement();
-        String qry = "insert into public.cliente (nombre,apellido,limite_credito)" +
-           "values ('pedro','pedrito',1000)";
-        int filasInsertadas = smt.executeUpdate(qry);
-            System.out.println("Total de Registros "
-                    + "insertados"+filasInsertadas);
-            smt.close();     
-        } catch (SQLException e){
-            e.getMessage();
-        }
-    }
+//    public static void main(String[] args) throws SQLException {
+//        CreateConection conexionPostgres = new CreateConection();
+//        Connection con = conexionPostgres.getConection();
+//        try {
+//            Statement smt = con.createStatement();
+//        String qry = "insert into public.cliente (nombre,apellido,limite_credito)" +
+//           "values ('pedro','pedrito',1000)";
+//        int filasInsertadas = smt.executeUpdate(qry);
+//            System.out.println("Total de Registros "
+//                    + "insertados"+filasInsertadas);
+//            smt.close();     
+//        } catch (SQLException e){
+//            e.getMessage();
+//        }
+//    }
     
 }
